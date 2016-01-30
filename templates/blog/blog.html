@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Блог{% endblock title %}
+
+{% block navbar_blog %}class = "active"{% endblock navbar_blog %}
+
+{% block content %}
+
+{% for each in article %}
+<div class="container">
+<div class="jumbotron">
+<div class="media">
+  <div class="media-left media-middle">
+    <a href="#">
+      <img class="media-object article_pic" src="/{{each.image}}" alt="{{ each.subject }}">
+    </a>
+  	 </div>
+  <div class="media-body">
+  <table class="blog_list">
+    <tr><td><h3 class="media-heading"><a href = "{% url 'article' %}">{{ each.subject }}</a></h3></td></tr>
+    <tr><td><h6>{{ each.pub_date }}</h6></td></tr>
+  <tr><td><p>{{ each.description }}</p></td></tr>
+
+
+  </table>
+  </div>
+</div>
+</div>
+</div>
+<p></p>
+{% endfor %}
+ 
+
+{% endblock content %}

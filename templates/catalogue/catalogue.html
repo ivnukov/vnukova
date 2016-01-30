@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+
+{% block title %}Каталог{% endblock title %}
+
+{% block navbar_catalogue %}class="active"{% endblock navbar_catalogue %}
+{% block content %}
+<div class="container">
+<div class="jumbotron">
+<table class="main_catalogue">
+<h2 align="center">Выберите раздел:</h2>
+<tr>
+<td><div class="row">
+  <div >
+    <div class="thumbnail">
+      <img src="/static/images/cat_tom.jpg" alt="Томаты" class="catalogue_image">
+      <div class="caption">
+        <h3>Томаты</h3>
+        <p>Семена лучших сортов </p><p>томатов</p>
+        <p><a href="{% url 'list_view' 'T' %}" class="btn btn-primary" role="button">Смотреть</a></p>
+      </div>
+    </div>
+  </div>
+</div></td>
+
+<td><div class="row">
+  <div >
+    <div class="thumbnail">
+      <img src="/static/images/cat_veg.jpg" alt="Овощи" class="catalogue_image">
+      <div class="caption">
+        <h3>Овощные культуры</h3>
+        <p>Овощные, пряновкусовые и </p><p>многолетние растения</p>
+        <p><a href="{% url 'list_view' 'V' %}" class="btn btn-primary" role="button">Смотреть</a></p>
+      </div>
+    </div>
+  </div>
+</div></td>
+	
+<td><div class="row">
+  <div >
+    <div class="thumbnail">
+      <img src="/static/images/cat_dec.jpg" alt="Декоративные" class="catalogue_image">
+      <div class="caption">
+        <h3>Декоративные растения</h3>
+        <p>Саженцы ягодных и </p><p>декоративных культур</p>
+        <p><a href="{% url 'list_view' 'D' %}" class="btn btn-primary" role="button">Смотреть</a></p>
+      </div>
+    </div>
+  </div>
+</div></td></tr>
+</table><div>
+<p><a href="{% url 'list_view' 'A' %}" class="btn btn-primary" role="button">Смотреть всё</a></p>
+</div>
+</div>
+{% endblock content %}

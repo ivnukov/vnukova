@@ -1,0 +1,85 @@
+
+.main_catalogue {
+  margin: auto;
+  width: 99%;
+  text-align: center; 
+}
+.main_catalogue td {
+	width: 33%;
+	padding: 15px;
+
+}
+.main_catalogue td :hover {
+	background-color: #d1d1d1;
+	border-radius: 15px;
+}
+
+.thumbnail {
+
+	width: 99%;
+	display: block;
+  margin:auto;
+  line-height: 1.42857143;
+  background-color: #fff;
+  border: 1px solid #ddd;
+
+  -webkit-transition: border .2s ease-in-out;
+       -o-transition: border .2s ease-in-out;
+          transition: border .2s ease-in-out;
+}
+body
+{
+	background-image: url(/static/images/bg.jpg);
+}
+.catalogue_image {
+	border-radius:15px;
+	width:240px;
+}
+.catalogue_list {
+	width:90%;
+	margin: auto;
+}
+.catalogue_list td {
+	border: 1px solid grey;
+	padding: 3px;
+}
+.blog_list{
+	margin:auto;
+	width:100%;
+}
+.blog_list  td{
+	padding: 3px;
+}
+.article_pic {
+	width:120px;
+}
+.detail-view {
+
+	margin: left;
+	padding: 3px;
+	text-align:left;
+	width:70%;
+	border: 1px solid white;
+
+}
+
+.detail-view td {
+	border-radius: 2px;
+	padding: 3px;
+	border: 1px solid white;
+
+}
+
+.table-image {
+	width: 250px;
+	height:400px;
+	padding: 2px;
+	border-radius:7px;
+}
+.detail-table-header {
+	font-weight: bolder;
+	width: 15%;
+	text-align: right;
+	border: 1px solid white;
+
+}

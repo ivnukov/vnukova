@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+
+{% block title %}{{ name }}{% endblock title %}
+
+{% block navbar_catalogue %}class="active"{% endblock navbar_catalogue %}
+
+{% block content %}
+<div class="container">
+<div class="jumbotron">
+
+<h2>{{ name }}</h2>
+<table class="detail-view table-striped">
+<tr><td rowspan="5"><img class = "table-image" src="/{{ imagename }}" alt= "{{ name }}"/></td><td class="detail-table-header">Категория:</td>
+
+{% if section == "T" %}<td>Томаты</td>
+{% elif section == "V" %}<td>Овощи</td>
+{% else %} <td>Декоративные</td>
+{% endif %}
+</tr>
+<tr><td class="detail-table-header">Тип:</td>
+{% if extra == "ind" %}<td> Индетерминантные</td>
+{% elif extra == "pid"%}<td> Полуиндетерминантные</td>
+{% else %}<td> Детерминантные</td>
+{% endif %}	
+</tr>
+<tr><td class="detail-table-header">Цена:</td><td>{{ price }}</td></tr>
+<tr><td class="detail-table-header">Описание:</td><td>{{ description }}</td></tr>
+</table>
+
+</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+
+{% block title %}Каталог{% endblock title %}
+
+{% block navbar_catalogue %}class="active"{% endblock navbar_catalogue %}
+
+{% block content %}
+<div class="jumbotron">
+<div class="container">
+<table class="catalogue_list table-striped">
+<thead>
+<td><strong>Навание</strong></td>
+<td><strong>Описание</strong></td>
+<td><strong>Цена</strong></td>
+</thead>
+{% for each in item %}
+<tr>
+<td><a href = "{%url 'detail_view' each.id %}">{{ each.name }}</td>
+<td>{{ each.description|truncatechars:80 }}</td>
+<td>{{ each.price }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+</div>
+{% endblock content %}
