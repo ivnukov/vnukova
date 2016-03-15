@@ -1,65 +1,111 @@
-from django.core import urlresolvers
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from catalogue.models import Item
+# -*- coding: utf-8 -*-
+
+from catalogue.models import Item, Cart
 from django.views.generic.detail import DetailView
-from django.shortcuts import get_object_or_404, render_to_response
-from django.template import RequestContext
+from django.http import HttpResponse
+from django.shortcuts import render_to_response, redirect, render
+from django.core.paginator import Paginator
+from .forms import CartForm, OrderForm
+from django.contrib import auth
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.context_processors import csrf
+from django.core.mail import mail_admins
+import random
 
+CART_ID_SESSION_KEY = 'cart_id'
 
-# Create your views here.
+def _cart_id(request):
+    if request.session.get(CART_ID_SESSION_KEY,'') == '':
+        request.session[CART_ID_SESSION_KEY] = _generate_cart_id()
+    return request.session[CART_ID_SESSION_KEY]
+
+def _generate_cart_id():
+    cart_id = ''
+    characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()'
+    cart_id_length = 50
+    for y in range(cart_id_length):
+        cart_id += characters[random.randint(0, len(characters)-1)]
+    return cart_id 
+
 def main(request):
-	item = Item.objects.all()
-	return render(request, 'catalogue/catalogue.html', {'item': item})
+    item = Item.objects.all()
+    cart_id = _cart_id(request)
+    return render(request, 'catalogue/catalogue.html', {'item': item})
 
 def list_view(request, section_id):
-	if section_id == "A":
-		item = Item.objects.all()
-	else:
-		item = Item.objects.filter(section = section_id)
-	return render(request, 'catalogue/list_view.html', {'item': item})
+    if section_id == "A":
+        item = Item.objects.all()
+    else:
+        item = Item.objects.filter(section = section_id)
+    count = len(item)
+    return render(request, 'catalogue/list_view.html', {'item': item, 'count':count})
 
-#class ItemDetailView(DetailView):
-#	model = Item
-#	template_name = "catalogue/detail.html"
-#	def get_context_data(self, **kwargs):
-#		context = super(ItemDetailView, self).get_context_data(**kwargs)
-#		return context
 
-# this stuff goes at the top of the file, below other imports
+def product(request, pk):
+    cart_form = CartForm
+    args = {'cart_add_form': cart_form,	'item': Item.objects.get(id=pk)}
+    args.update(csrf(request))
+    rec_items = Item.objects.all()
+    args['randomitem'] = [
+        Item.objects.get(id = random.randint(1,len(rec_items)-1)),
+        Item.objects.get(id = random.randint(1,len(rec_items)-1)),
+        Item.objects.get(id = random.randint(1,len(rec_items)-1))]
+    return render_to_response('catalogue/detail.html', args)
 
-# new product view, with POST vs GET detection
+def add_to_cart(request, id):
+    product_id = id
+    p = Item.objects.get(id=id)
+    if request.method == 'POST':
+        form = CartForm(request.POST)
+        product_in_cart = False
+        current_cart = Cart.objects.filter(owner = request.session[CART_ID_SESSION_KEY])
+        if form.is_valid():
+            for product in current_cart:
 
-def show_product(request, pk, template_name="catalogue/detail.html"):
-	p = get_object_or_404(Item, id=pk)
-	description = p.description
-	extra = p.extra
-	price = p.price
-	name = p.name
-	imagename = p.imagename	
-	return render_to_response(template_name, locals(), context_instance=RequestContext(request)) 
-"""
-def show_product(request, pk, template_name="catalogue/detail.html"):
-	p = get_object_or_404(Item, id=pk)
-	description = p.description
-	extra = p.extra
-	price = p.price
-	name = p.name
-	imagename = p.imagename
-	form = ProductAddToCartForm()
+                if product.product.id == p.id:
+                    product.increase_quantity(request.POST['quantity'])
+                    product_in_cart = True
+            if not product_in_cart:
+                cart = form.save(commit=False)
+                cart.owner = _cart_id(request)
+                cart.product = Item.objects.get(id=id)
+                form.save()
+    return redirect('/catalogue/detail/%s/' % product_id)
 
-	if request.method == 'POST':
-		postdata = request.POST.copy()
-		form = ProductAddToCartForm(request, postdata)
-	if form.is_valid():
-		cart.add_to_cart(request)
-	if request.session.test_cookie_worked():
-		request.session.delete_test_cookie()
-		url = urlresolvers.reverse('show_cart')
-		return HttpResponseRedirect(url)
-	else:
-		form = ProductAddToCartForm(request=request, label_suffix=':')
-		form.fields['pk'].widget.attrs['value'] = pk
-		request.session.set_test_cookie()
-		return render_to_response("catalogue/detail.html", locals(),context_instance=RequestContext(request)) 
-"""
+def cart(request):
+    args = {}
+    args['username'] = auth.get_user(request).username
+    args['email']=OrderForm
+    args.update(csrf(request))
+    args['cart'] = Cart.objects.filter(owner=request.session[CART_ID_SESSION_KEY])
+    args['totalcost'] = 0
+    for each in args['cart']:
+        args['totalcost']+=int(each.cost())
+    return render_to_response('cart/cart.html', args)
+
+
+def del_from_cart(request, id):
+    Cart.objects.get(id=id).delete()
+    return redirect('/catalogue/cart/')
+
+def increase(request, id):
+    Cart.objects.get(id = id).increase_quantity(1)
+    return redirect('/catalogue/cart/')
+
+def decrease(request, id):
+    item = Cart.objects.get(id = id)
+    if item.quantity == 1:
+        item.delete()
+    else:    
+        item.increase_quantity(-1)
+    return redirect('/catalogue/cart/')    
+
+def order(request):
+    if request.POST:
+        form=OrderForm(request.POST)
+        if form.is_valid():
+            email=form.cleaned_data['email']
+            mail_admins(u'Оформлен заказ!', 'На сайте оставлен заказ!')
+            return redirect('/')
+        else:
+            return redirect('/catalogue/cart/')

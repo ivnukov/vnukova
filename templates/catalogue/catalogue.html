@@ -5,8 +5,6 @@
 
 {% block navbar_catalogue %}class="active"{% endblock navbar_catalogue %}
 {% block content %}
-<div class="container">
-<div class="jumbotron">
 <table class="main_catalogue">
 <h2 align="center">Выберите раздел:</h2>
 <tr>
@@ -50,6 +48,5 @@
 </div></td></tr>
 </table><div>
 <p><a href="{% url 'list_view' 'A' %}" class="btn btn-primary" role="button">Смотреть всё</a></p>
-</div>
-</div>
+
 {% endblock content %}

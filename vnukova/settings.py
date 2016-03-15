@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'catalogue', 
     'blog',
+
     ]
 
 MIDDLEWARE_CLASSES = [
@@ -148,3 +149,12 @@ TEMPLATES = [
         },
     }
 ]
+
+EMAIL_HOST = 'localhost'
+
+EMAIL_PORT = 1025
+
+ADMINS = (
+       ('mama', 'vnukova7@rambler.ru'),
+       ('igor', 'dleshui@gmail.com'),
+    )

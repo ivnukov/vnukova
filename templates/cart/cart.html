@@ -1,8 +1,45 @@
 {% extends "base.html" %}
-
-
+{% load staticfiles %}
+{% block title %}Корзина{% endblock title %}
+{% block navbar_cart %}class="active"{% endblock navbar_cart %}
 {% block content %}
- <div class = "jumbotron"><h1>Cart Page Here</h1>
- Cart item count: {{ cart_item_count }}
- </div>
+    <table class="cart table-striped">
+
+    <thead>
+        <td>Наименование</td>
+        <td>Кол-во</td>
+        <td>Цена</td>
+        <td>Стоимость</td>
+        <td></td>
+    </thead>
+        {% for row in cart %}
+	<tr>
+	    <td>{{ row.product }}</td>
+        <td><a href = "{% url 'decrease' row.id %}"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a> {{ row.quantity }} шт. <a href = "{% url 'increase' row.id %}"<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></td>
+        <td>{{ row.product.price }} грн.</td>
+        <td>{{ row.cost }} грн.</td>
+        <td><a href="{% url 'del' row.id %}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a></td
+    </tr>
+        {% endfor %}
+        <tfoot><td colspan="4">Итого</td><td>{{totalcost}} грн</td></tfoot>
+    </table>
+    <div >
+    <form method="POST" action="{% url 'order' %}">
+        {% csrf_token %}
+        <div >
+    <div >
+      <div>
+        <div >
+          <label for="right-label" class="right inline">{{ email.label}}</label>
+        </div>
+        <div>
+          {{ email }}
+            <input class="button postfix" type="submit" value="Order">
+         </div>
+      </div>
+    </div>
+
+  </div>
+
+    </form>
 {% endblock %} 

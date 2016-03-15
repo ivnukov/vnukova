@@ -7,8 +7,6 @@
 {% block content %}
 
 {% for each in article %}
-<div class="container">
-<div class="jumbotron">
 <div class="media">
   <div class="media-left media-middle">
     <a href="#">
@@ -16,19 +14,18 @@
     </a>
   	 </div>
   <div class="media-body">
-  <table class="blog_list">
-    <tr><td><h3 class="media-heading"><a href = "{% url 'article' %}">{{ each.subject }}</a></h3></td></tr>
-    <tr><td><h6>{{ each.pub_date }}</h6></td></tr>
-  <tr><td><p>{{ each.description }}</p></td></tr>
-
-
-  </table>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{ each.subject }} </h3>
+  </div>
+  <div class="panel-body">
+    {{ each.description }}
+    <hr />
+    Добавлена: {{ each.pub_date|date:"j.m.o" }}
   </div>
 </div>
+  </div>
 </div>
-</div>
-<p></p>
-{% endfor %}
- 
 
+{% endfor %}
 {% endblock content %}

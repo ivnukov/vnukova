@@ -6,9 +6,7 @@
 {% block navbar_catalogue %}class="active"{% endblock navbar_catalogue %}
 
 {% block content %}
-<div class="jumbotron">
-<div class="container">
-<table class="catalogue_list table-striped">
+{% comment %}<table class="catalogue_list table-striped">
 <thead>
 <td><strong>Навание</strong></td>
 <td><strong>Описание</strong></td>
@@ -18,10 +16,19 @@
 <tr>
 <td><a href = "{%url 'detail_view' each.id %}">{{ each.name }}</td>
 <td>{{ each.description|truncatechars:80 }}</td>
-<td>{{ each.price }}</td>
+<td>{{ each.price }} грн.</td>
 </tr>
 {% endfor %}
 </table>
+{% endcomment %}
+
+<div align="center">
+{% for each in item %}
+<div class="cat"><table class="catalogue_list"><tr><td><img class = "catalogue_image" src="/{{ each.imagename }}" alt= "{{ each.name }}"/></td></tr>
+<tr><td><a href = "{%url 'detail_view' each.id %}">{{ each.name }}</a></td></tr>
+<tr><td>{{ each.description|truncatechars:80 }}</td></tr>
+<tr><td>{{ each.price }}</td></tr></table>
 </div>
+{% endfor %}
 </div>
 {% endblock content %}

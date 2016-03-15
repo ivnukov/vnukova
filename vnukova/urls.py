@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^$', views.index, name  = "index" ),
     url(r'^catalogue/', include('catalogue.urls')),
     url(r'^blog/', include('blog.urls')),
+
 ]
 
